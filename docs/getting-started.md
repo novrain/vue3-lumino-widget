@@ -18,6 +18,7 @@ Import the component or register it globally in your Vue instance:
 
 ```vue
 import { LuminoBoxPanel, LuminoWidget } from "vue3-lumino-widget";
+import '@iota-cn/vue3-lumino-widget/dist/style.css'
 ```
 
 Use the component in your template:
