@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import "@fortawesome/fontawesome-free/css/all.css"
+// import "@fortawesome/fontawesome-free/css/all.css"
 import '@lumino/default-theme/style/index.css'
 import { BoxPanel, DockPanel, Widget } from '@lumino/widgets'
 import { provide, onMounted, onUpdated, ref, onUnmounted } from 'vue'
