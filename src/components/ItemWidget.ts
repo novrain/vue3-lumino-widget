@@ -6,18 +6,15 @@ export interface Item {
   name: string,
 }
 
-export interface OnClose {
-  (msg: Message): void
-}
-
-export interface OnActive {
+export interface OnMessage {
   (msg: Message): void
 }
 
 export interface Options {
   closable?: boolean
-  onClose?: OnClose
-  onActive?: OnActive
+  onClose?: OnMessage
+  onActive?: OnMessage
+  onShow?: OnMessage
 }
 
 export interface WidgetEvent {
@@ -29,10 +26,11 @@ export interface WidgetEvent {
 export class ItemWidget extends Widget {
   closable: boolean
   item: Item
-  onClose?: OnClose
-  onActive?: OnActive
+  onClose?: OnMessage
+  onActive?: OnMessage
+  onShow?: OnMessage
 
-  constructor(item: Item, { closable = true, onClose }: Options) {
+  constructor(item: Item, { closable = true, onClose, onActive, onShow }: Options) {
     super({ node: ItemWidget.createNode(item) })
     this.closable = closable
     // classes and flags
@@ -43,12 +41,21 @@ export class ItemWidget extends Widget {
     this.title.closable = closable
     this.item = item
     this.onClose = onClose
+    this.onActive = onActive
+    this.onShow = onShow
   }
 
   static createNode(item: Item) {
     const div = document.createElement('div')
     div.setAttribute('id', item.id)
     return div
+  }
+
+  protected onAfterShow(msg: Message): void {
+    super.onAfterShow(msg)
+    if (this.onShow) {
+      this.onShow(msg)
+    }
   }
 
   protected onActivateRequest(msg: Message): void {

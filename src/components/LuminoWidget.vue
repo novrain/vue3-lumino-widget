@@ -14,7 +14,7 @@ import { inject, nextTick, onMounted, ref, watch } from 'vue'
 import { ItemWidget, Item } from './ItemWidget'
 
 const props = defineProps(['item', 'closable'])
-const emits = defineEmits(['close', 'active'])
+const emits = defineEmits(['close', 'active', 'show'])
 const boxPanel: BoxPanel | undefined = inject('boxPanel')
 const dockPanel: DockPanel | undefined = inject('dockPanel')
 const realEl = ref()
@@ -23,12 +23,18 @@ const onLuminoWidgetClose = (msg: Message) => {
 }
 
 const onLuminoWidgetActive = (msg: Message) => {
-  emits('close', { msg, item: props.item, widget: luminoWidget })
+  emits('active', { msg, item: props.item, widget: luminoWidget })
 }
+
+const onLuminoWidgetShow = (msg: Message) => {
+  emits('show', { msg, item: props.item, widget: luminoWidget })
+}
+
 const luminoWidget = new ItemWidget(props.item, {
   closable: props.closable,
   onClose: onLuminoWidgetClose,
-  onActive: onLuminoWidgetActive
+  onActive: onLuminoWidgetActive,
+  onShow: onLuminoWidgetShow
 })
 
 watch(() => props.item, (newItem: Item, oldItem: Item) => {

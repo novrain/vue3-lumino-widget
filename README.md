@@ -1,4 +1,9 @@
-# vue3 lumino widget
+# vue3 lumino widget [![npm][npm-image]][npm-url] [![downloads][downloads-image]][downloads-url]
+
+[npm-image]: https://img.shields.io/npm/v/vue3-lumino-widget.svg
+[npm-url]: https://npmjs.org/package/vue3-lumino-widget
+[downloads-image]: https://img.shields.io/npm/dm/vue3-lumino-widget.svg
+[downloads-url]: https://npmjs.org/package/vue3-lumino-widget
 
 A Vue.js wrapper for jupyter lumino package
 
@@ -36,6 +41,7 @@ Use the component in your template:
                 :key="item.id"
                 @close="onLuminoWidgetClose"
                 @active="onLuminoWidgetActive"
+                @show="onLuminoWidgetShow"
                 :item="item">
     <p class="item-component">{{ item.name }}</p>
   </LuminoWidget>
