@@ -8,10 +8,11 @@
 <script setup lang="ts">
 // import "@fortawesome/fontawesome-free/css/all.css"
 import '@lumino/default-theme/style/index.css'
-import { BoxPanel, DockPanel, Widget } from '@lumino/widgets'
-import { provide, onMounted, onUpdated, ref, onUnmounted } from 'vue'
+import { BoxPanel, Widget } from '@lumino/widgets'
+import { onMounted, onUnmounted, onUpdated, provide, ref } from 'vue'
+import { CustomDockPanel } from './ItemWidget'
 const boxPanel = new BoxPanel({ direction: 'left-to-right', spacing: 0 })
-const dockPanel = new DockPanel()
+const dockPanel = new CustomDockPanel()
 boxPanel.id = 'box-panel'
 dockPanel.id = 'dock-panel'
 
@@ -47,6 +48,14 @@ onUpdated(() => {
 .lumino-container {
   display: flex;
   flex: 1;
+
+  :deep(.lm-mod-current){
+    border-top: #00000060 2px solid;
+  }
+
+  :deep(.lumino-tab-active){
+    border-top: #000000AA 2px solid;
+  }
   
   :deep(#box-panel) {
     display: flex;

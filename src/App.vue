@@ -9,6 +9,7 @@
                     @close="onLuminoWidgetClose"
                     @active="onLuminoWidgetActive"
                     @show="onLuminoWidgetShow"
+                    :title-active-class="activeClass"
                     :closable="item.closable"
                     :item="item">
         <p class="item-component">{{ item.name }}</p>
@@ -43,6 +44,14 @@ const onLuminoWidgetShow = ({ msg, widget, item }: WidgetEvent) => {
   active.value = widget
 }
 
+const activeClass = ref('item-active-0')
+let onOff = false
+
+setInterval(() => {
+  onOff = !onOff
+  activeClass.value = onOff ? 'item-active-0' : 'item-active-1'
+}, 1000)
+
 </script>
 
 <style scoped lang="scss">
@@ -55,6 +64,14 @@ const onLuminoWidgetShow = ({ msg, widget, item }: WidgetEvent) => {
   h6 {
     margin-top: 10px;
     margin-bottom: 10px;
+  }
+
+  :deep(.item-active-0) {
+    border-top: orange 2px solid;
+  }
+
+  :deep(.item-active-1) {
+    border-top: palevioletred 2px solid;
   }
 
   .item-component {

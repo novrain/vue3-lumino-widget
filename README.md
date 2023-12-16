@@ -5,7 +5,9 @@
 [downloads-image]: https://img.shields.io/npm/dm/vue3-lumino-widget.svg
 [downloads-url]: https://npmjs.org/package/vue3-lumino-widget
 
-A Vue.js wrapper for jupyter lumino package
+A Vue.js wrapper for jupyter [lumino](https://github.com/jupyterlab/lumino) package
+
+![GIF](docs/images/lumino.gif)
 
 # Getting Started
 
@@ -33,17 +35,91 @@ import 'vue3-lumino-widget/dist/style.css'
 // import "@fortawesome/fontawesome-free/css/all.css"
 ```
 
+By the way, to make close icon more customable, see this [pull request in lumino](https://github.com/jupyterlab/lumino/pull/669).
+
 Use the component in your template:
 
 ```vue
-<LuminoBoxPanel>
-  <LuminoWidget v-for="item in items"
-                :key="item.id"
-                @close="onLuminoWidgetClose"
-                @active="onLuminoWidgetActive"
-                @show="onLuminoWidgetShow"
-                :item="item">
-    <p class="item-component">{{ item.name }}</p>
-  </LuminoWidget>
-</LuminoBoxPanel>
+<template>
+  <div class="container">
+    <h4>Vue3 Lumino Widget</h4>
+    <h6>Drag and drop the tab item</h6>
+    <h6>Current active: {{ active?.item.name || 'none' }}</h6>
+    <LuminoBoxPanel>
+      <LuminoWidget v-for="item in items"
+                    :key="item.id"
+                    @close="onLuminoWidgetClose"
+                    @active="onLuminoWidgetActive"
+                    @show="onLuminoWidgetShow"
+                    :title-active-class="activeClass"
+                    :closable="item.closable"
+                    :item="item">
+        <p class="item-component">{{ item.name }}</p>
+      </LuminoWidget>
+    </LuminoBoxPanel>
+  </div>
+</template>
+
+<script setup lang="ts">
+import LuminoBoxPanel from "./components/LuminoBoxPanel.vue"
+import LuminoWidget from "./components/LuminoWidget.vue"
+import { ref } from 'vue'
+import { ItemWidget, WidgetEvent } from "./components/ItemWidget"
+
+const items = ref([
+  { id: 'id1', name: 'item1', closable: false },
+  { id: 'id2', name: 'item2' }
+])
+
+const active = ref<ItemWidget>()
+
+const onLuminoWidgetClose = ({ msg, widget, item }: WidgetEvent) => {
+  // do some thing, then doClose item.
+  widget.doClose(msg)
+}
+
+const onLuminoWidgetActive = ({ msg, widget, item }: WidgetEvent) => {
+  active.value = widget
+}
+
+const onLuminoWidgetShow = ({ msg, widget, item }: WidgetEvent) => {
+  active.value = widget
+}
+
+const activeClass = ref('item-active-0')
+let onOff = false
+
+setInterval(() => {
+  onOff = !onOff
+  activeClass.value = onOff ? 'item-active-0' : 'item-active-1'
+}, 1000)
+
+</script>
+
+<style scoped lang="scss">
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  h4,
+  h6 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  :deep(.item-active-0) {
+    border-top: orange 2px solid;
+  }
+
+  :deep(.item-active-1) {
+    border-top: palevioletred 2px solid;
+  }
+
+  .item-component {
+    margin: 10px;
+  }
+}
+</style>
+
 ```
