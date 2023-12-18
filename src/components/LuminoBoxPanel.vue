@@ -24,19 +24,19 @@ const container = ref<HTMLElement | null>(null)
 const onWindowResize = () => {
   boxPanel.update()
 }
+let sizeChangeObserver = new ResizeObserver(onWindowResize)
 
 onMounted(() => {
   boxPanel.addWidget(dockPanel)
   BoxPanel.setStretch(dockPanel, 1)
   if (container.value) {
     Widget.attach(boxPanel, container.value)
+    sizeChangeObserver.observe(container.value)
   }
-
-  window.addEventListener('resize', onWindowResize)
 })
 
 onUnmounted(() => {
-  window.removeEventListener('resize', onWindowResize)
+  sizeChangeObserver.disconnect()
 })
 
 onUpdated(() => {
