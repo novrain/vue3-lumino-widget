@@ -14,7 +14,7 @@ import { inject, nextTick, onMounted, ref, watch } from 'vue'
 import { CustomDockPanel, Item, ItemWidget } from './ItemWidget'
 
 const props = withDefaults(defineProps<{
-  item: { id: string, name: string },
+  item: Item,
   closable?: boolean,
   titleClass?: string,
   titleActiveClass?: string

@@ -11,8 +11,13 @@ import '@lumino/default-theme/style/index.css'
 import { BoxPanel, Widget } from '@lumino/widgets'
 import { onMounted, onUnmounted, onUpdated, provide, ref } from 'vue'
 import { CustomDockPanel } from './ItemWidget'
+
+const props = withDefaults(defineProps<{
+  tabsConstrained?: boolean
+}>(), { tabsConstrained: false })
+
 const boxPanel = new BoxPanel({ direction: 'left-to-right', spacing: 0 })
-const dockPanel = new CustomDockPanel()
+const dockPanel = new CustomDockPanel({ tabsConstrained: props.tabsConstrained })
 boxPanel.id = 'box-panel'
 dockPanel.id = 'dock-panel'
 
