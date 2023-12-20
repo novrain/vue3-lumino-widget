@@ -3,7 +3,7 @@ import { DockPanel, Widget } from '@lumino/widgets'
 
 export interface Item {
   id: string,
-  name: string,
+  name?: string,
 }
 
 export interface OnMessage {
@@ -42,7 +42,7 @@ export class ItemWidget extends Widget {
     this.setFlag(Widget.Flag.DisallowLayout)
     this.addClass('lumino-content')
     // tab title
-    this.title.label = item.name
+    this.title.label = item.name || 'tab'
     this.title.closable = closable
     this.item = item
     this.onClose = onClose
