@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { Message } from '@lumino/messaging'
 import { BoxPanel, Widget } from '@lumino/widgets'
-import { inject, nextTick, onMounted, ref, watch } from 'vue'
+import { inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { CustomDockPanel, Item, ItemWidget } from './ItemWidget'
 
 const props = withDefaults(defineProps<{
@@ -63,7 +63,7 @@ const luminoWidget = new ItemWidget(props.item, {
 })
 
 watch(() => props.item, (newItem: Item, oldItem: Item) => {
-  luminoWidget.title.label = newItem.name
+  luminoWidget.title.label = newItem.name || ''
 }, { deep: true })
 
 watch(() => props.titleActiveClass, (newClass: string, oldClass: string) => {
@@ -86,6 +86,13 @@ onMounted(() => {
     })
   }
 })
+
+onUnmounted(() => {
+  if (luminoWidget.isAttached) {
+    luminoWidget.doClose(Widget.Msg.CloseRequest)
+  }
+})
+
 </script>
 
 <style scoped lang="scss">
