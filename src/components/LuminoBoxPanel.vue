@@ -29,7 +29,7 @@ provide('dockPanel', dockPanel)
 
 const container = ref<HTMLElement | null>(null)
 
-const onAddRequest = (event, tabBar: TabBar<Widget>) => {
+const onAddRequest = (source: CustomDockPanel, tabBar: TabBar<Widget>) => {
   if (tabBar.currentTitle) {
     tabBar.currentTitle.owner.activate()
     emits('add')
