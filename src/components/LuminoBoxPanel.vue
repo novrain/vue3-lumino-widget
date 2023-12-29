@@ -8,16 +8,19 @@
 <script setup lang="ts">
 // import "@fortawesome/fontawesome-free/css/all.css"
 import '@lumino/default-theme/style/index.css'
-import { BoxPanel, Widget } from '@lumino/widgets'
+import { BoxPanel, TabBar, Widget } from '@lumino/widgets'
 import { onMounted, onUnmounted, onUpdated, provide, ref } from 'vue'
 import { CustomDockPanel } from './ItemWidget'
 
 const props = withDefaults(defineProps<{
   tabsConstrained?: boolean
-}>(), { tabsConstrained: false })
+  addButtonEnabled?: boolean
+}>(), { tabsConstrained: false, addButtonEnabled: false })
+
+const emits = defineEmits(['add'])
 
 const boxPanel = new BoxPanel({ direction: 'left-to-right', spacing: 0 })
-const dockPanel = new CustomDockPanel({ tabsConstrained: props.tabsConstrained })
+const dockPanel = new CustomDockPanel({ tabsConstrained: props.tabsConstrained, addButtonEnabled: props.addButtonEnabled })
 boxPanel.id = 'box-panel'
 dockPanel.id = 'dock-panel'
 
@@ -25,6 +28,15 @@ provide('boxPanel', boxPanel)
 provide('dockPanel', dockPanel)
 
 const container = ref<HTMLElement | null>(null)
+
+const onAddRequest = (event, tabBar: TabBar<Widget>) => {
+  if (tabBar.currentTitle) {
+    tabBar.currentTitle.owner.activate()
+    emits('add')
+  }
+}
+
+dockPanel.addRequested.connect(onAddRequest)
 
 const onWindowResize = () => {
   boxPanel.update()
@@ -54,14 +66,14 @@ onUpdated(() => {
   display: flex;
   flex: 1;
 
-  :deep(.lm-mod-current){
+  :deep(.lm-mod-current) {
     border-top: #00000060 2px solid;
   }
 
-  :deep(.lumino-tab-active){
+  :deep(.lumino-tab-active) {
     border-top: #000000AA 2px solid;
   }
-  
+
   :deep(#box-panel) {
     display: flex;
     flex: 1;
