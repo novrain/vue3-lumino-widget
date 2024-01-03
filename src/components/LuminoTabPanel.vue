@@ -8,44 +8,40 @@
 <script setup lang="ts">
 // import "@fortawesome/fontawesome-free/css/all.css"
 import '@lumino/default-theme/style/index.css'
-import { BoxPanel, TabBar, TabPanel, Widget } from '@lumino/widgets'
+import { TabBar, TabPanel, Widget } from '@lumino/widgets'
 import { onMounted, onUnmounted, onUpdated, provide, ref } from 'vue'
-import { CustomDockPanel } from './ItemWidget'
 
 const props = withDefaults(defineProps<{ id?: string } & TabPanel.IOptions & TabBar.IOptions<any>>(),
-  { tabsConstrained: false, addButtonEnabled: false, tabsMovable: true })
+  { addButtonEnabled: false })
 
 const emits = defineEmits(['add'])
 
-const boxPanel = new BoxPanel({ ...(props as any) })
-const dockPanel = new CustomDockPanel({ ...(props as any) })
-boxPanel.id = (props.id || 'panel') + '-box'
-boxPanel.addClass('lumino-box-panel')
-dockPanel.id = (props.id || 'panel') + '-dock'
-
-provide('container', dockPanel)
+const tabPanel = new TabPanel({
+  ...(props as any)
+})
+tabPanel.id = (props.id || 'panel') + 'tab'
+tabPanel.addClass('lumino-tab-panel')
+provide('container', tabPanel)
 
 const container = ref<HTMLElement | null>(null)
 
-const onAddRequest = (source: CustomDockPanel, tabBar: TabBar<Widget>) => {
+const onAddRequest = (source: TabPanel, tabBar: TabBar<Widget>) => {
   if (tabBar.currentTitle) {
     tabBar.currentTitle.owner.activate()
     emits('add')
   }
 }
 
-dockPanel.addRequested.connect(onAddRequest)
+tabPanel.addRequested.connect(onAddRequest)
 
 const onWindowResize = () => {
-  boxPanel.update()
+  tabPanel.update()
 }
 let sizeChangeObserver = new ResizeObserver(onWindowResize)
 
 onMounted(() => {
-  boxPanel.addWidget(dockPanel)
-  BoxPanel.setStretch(dockPanel, 1)
   if (container.value) {
-    Widget.attach(boxPanel, container.value)
+    Widget.attach(tabPanel, container.value)
     sizeChangeObserver.observe(container.value)
   }
 })
@@ -55,7 +51,7 @@ onUnmounted(() => {
 })
 
 onUpdated(() => {
-  boxPanel.update()
+  tabPanel.update()
 })
 </script>
 
@@ -72,8 +68,8 @@ onUpdated(() => {
     border-top: #000000AA 2px solid;
   }
 
-  :deep(.lumino-box-panel),
-  :deep(#panel-box) {
+  :deep(.lumino-tab-panel),
+  :deep(#panel-tab) {
     display: flex;
     flex: 1;
 

@@ -9,8 +9,8 @@
 
 <script setup lang="ts">
 import { Message } from '@lumino/messaging'
-import { BoxPanel, Widget } from '@lumino/widgets'
-import { inject, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
+import { TabPanel, Widget } from '@lumino/widgets'
+import { inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { CustomDockPanel, Item, ItemWidget } from './ItemWidget'
 
 const props = withDefaults(defineProps<{
@@ -20,8 +20,8 @@ const props = withDefaults(defineProps<{
   titleActiveClass?: string
 }>(), { closable: true, titleClass: 'lumino-tab', titleActiveClass: 'lumino-tab-active' })
 const emits = defineEmits(['close', 'active', 'deActive', 'show', 'hide'])
-const boxPanel: BoxPanel | undefined = inject('boxPanel')
-const dockPanel: CustomDockPanel | undefined = inject('dockPanel')
+// const boxPanel: BoxPanel | undefined = inject('boxPanel')
+const container: CustomDockPanel | TabPanel | undefined = inject('container')
 const realEl = ref()
 
 const createTitleClass = (active: boolean) => {
@@ -33,7 +33,7 @@ const onLuminoWidgetClose = (msg: Message) => {
 }
 
 const onLuminoWidgetActive = (msg: Message) => {
-  dockPanel!.currentWidget = luminoWidget
+  container!.currentWidget = luminoWidget
   luminoWidget.title.className = createTitleClass(true)
   emits('active', { msg, item: props.item, widget: luminoWidget })
 }
@@ -67,29 +67,46 @@ watch(() => props.item, (newItem: Item, oldItem: Item) => {
 }, { deep: true })
 
 watch(() => props.titleActiveClass, (newClass: string, oldClass: string) => {
-  luminoWidget.title.className = createTitleClass(luminoWidget === dockPanel!.currentWidget)
+  luminoWidget.title.className = createTitleClass(luminoWidget === container!.currentWidget)
 })
 
 watch(() => props.titleClass, (newClass: string, oldClass: string) => {
-  luminoWidget.title.className = createTitleClass(luminoWidget === dockPanel!.currentWidget)
+  luminoWidget.title.className = createTitleClass(luminoWidget === container!.currentWidget)
+})
+
+watch(() => props.closable, (newClosable, oldClosable) => {
+  luminoWidget.title.closable = newClosable
 })
 
 onMounted(() => {
-  const widgets = dockPanel!.widgets()
-  if (!Array.from(widgets).find((w: Widget) => {
+  let widgets = [] as any
+  if (container instanceof CustomDockPanel) {
+    widgets = Array.from(container!.widgets())
+  }
+  if (container instanceof TabPanel) {
+    widgets = container.widgets
+  }
+  if (!widgets.find((w: Widget) => {
     return w.id === props.item.id
   })) {
-    dockPanel!.addWidget(luminoWidget, { ref: dockPanel!.currentWidget })
+    container!.addWidget(luminoWidget, { ref: container!.currentWidget })
     nextTick(() => {
       document.getElementById(props.item.id)?.appendChild(realEl.value)
-      dockPanel!.activateWidget(luminoWidget)
+      luminoWidget.activate()
+      if (container instanceof CustomDockPanel) {
+        container!.activateWidget(luminoWidget)
+      }
     })
   }
 })
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
   if (luminoWidget.isAttached) {
-    luminoWidget.doClose(Widget.Msg.CloseRequest)
+    try {
+      luminoWidget.doClose(Widget.Msg.CloseRequest)
+    } catch (e) {
+      console.log(e)
+    }
   }
 })
 
