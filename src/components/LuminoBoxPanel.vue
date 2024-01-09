@@ -8,11 +8,11 @@
 <script setup lang="ts">
 // import "@fortawesome/fontawesome-free/css/all.css"
 import '@lumino/default-theme/style/index.css'
-import { BoxPanel, TabBar, TabPanel, Widget } from '@lumino/widgets'
+import { BoxPanel, TabBar, DockPanel, Widget } from '@lumino/widgets'
 import { onMounted, onUnmounted, onUpdated, provide, ref } from 'vue'
 import { CustomDockPanel } from './ItemWidget'
 
-const props = withDefaults(defineProps<{ id?: string } & TabPanel.IOptions & TabBar.IOptions<any>>(),
+const props = withDefaults(defineProps<{ id?: string } & BoxPanel.IOptions & DockPanel.IOptions>(),
   { tabsConstrained: false, addButtonEnabled: false, tabsMovable: true })
 
 const emits = defineEmits(['add'])
