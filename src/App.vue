@@ -72,7 +72,6 @@ setInterval(() => {
   activeClass.value = onOff ? 'item-active-0' : 'item-active-1'
 }, 1000)
 
-
 const activeTab = ref<ItemWidget>()
 
 const onWidgetInTabPanelClose = ({ msg, widget, item }: WidgetEvent) => {

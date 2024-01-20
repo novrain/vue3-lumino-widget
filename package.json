@@ -1,7 +1,7 @@
 {
   "name": "vue3-lumino-widget",
   "private": false,
-  "version": "1.0.6",
+  "version": "1.0.7",
   "type": "module",
   "files": [
     "dist",
@@ -54,22 +54,24 @@
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^6.5.1",
-    "@rushstack/eslint-patch": "^1.6.0",
-    "@types/node": "^20.10.4",
-    "@vitejs/plugin-vue": "^4.5.2",
+    "@rushstack/eslint-patch": "^1.7.0",
+    "@types/node": "^20.11.5",
+    "@vitejs/plugin-vue": "^5.0.3",
     "@vue/eslint-config-typescript": "^12.0.0",
-    "eslint": "^8.55.0",
-    "eslint-plugin-vue": "^9.19.2",
-    "sass": "^1.69.5",
+    "eslint": "^8.56.0",
+    "eslint-plugin-vue": "^9.20.1",
+    "sass": "^1.70.0",
     "typescript": "^5.3.3",
-    "vite": "^5.0.8",
-    "vite-plugin-dts": "^3.6.4",
-    "vitepress": "^1.0.0-rc.31",
-    "vue": "^3.3.11",
-    "vue-tsc": "^1.8.25"
+    "vite": "^5.0.12",
+    "vite-plugin-dts": "^3.7.1",
+    "vitepress": "^1.0.0-rc.39",
+    "vue": "^3.4.15",
+    "vue-tsc": "^1.8.27"
   },
   "dependencies": {
     "@lumino/default-theme": "^2.1.4",
+    "@lumino/messaging": "^2.0.1",
+    "@lumino/virtualdom": "^2.0.1",
     "@lumino/widgets": "^2.3.1"
   }
 }

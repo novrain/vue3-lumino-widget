@@ -6,17 +6,17 @@
 </template>
 
 <script setup lang="ts">
-// import "@fortawesome/fontawesome-free/css/all.css"
-import '@lumino/default-theme/style/index.css'
+import './theme.css'
 import { TabBar, TabPanel, Widget } from '@lumino/widgets'
 import { onMounted, onUnmounted, onUpdated, provide, ref } from 'vue'
+import { TabPanelSvg } from '../lumino-extends/Extends'
 
 const props = withDefaults(defineProps<{ id?: string } & TabPanel.IOptions & TabBar.IOptions<any>>(),
   { addButtonEnabled: false })
 
 const emits = defineEmits(['add'])
 
-const tabPanel = new TabPanel({
+const tabPanel = new TabPanelSvg({
   ...(props as any)
 })
 tabPanel.id = (props.id || 'panel') + 'tab'
@@ -56,31 +56,5 @@ onUpdated(() => {
 </script>
 
 <style lang="scss" scoped>
-.lumino-container {
-  display: flex;
-  flex: 1;
-
-  :deep(.lm-mod-current) {
-    border-top: #00000060 2px solid;
-  }
-
-  :deep(.lumino-tab-active) {
-    border-top: #000000AA 2px solid;
-  }
-
-  :deep(.lumino-tab-panel),
-  :deep(#panel-tab) {
-    display: flex;
-    flex: 1;
-
-    .lumino-content {
-      border: 1px solid #c0c0c0;
-      border-top: none;
-      background: white;
-      position: relative;
-      overflow: auto;
-      display: flex;
-    }
-  }
-}
+@import './common.scss';
 </style>

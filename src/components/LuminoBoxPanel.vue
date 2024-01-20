@@ -6,13 +6,12 @@
 </template>
 
 <script setup lang="ts">
-// import "@fortawesome/fontawesome-free/css/all.css"
-import '@lumino/default-theme/style/index.css'
-import { BoxPanel, TabBar, TabPanel, Widget } from '@lumino/widgets'
+import { BoxPanel, DockPanel, TabBar, Widget } from '@lumino/widgets'
 import { onMounted, onUnmounted, onUpdated, provide, ref } from 'vue'
 import { CustomDockPanel } from './ItemWidget'
+import './theme.css'
 
-const props = withDefaults(defineProps<{ id?: string } & TabPanel.IOptions & TabBar.IOptions<any>>(),
+const props = withDefaults(defineProps<{ id?: string } & BoxPanel.IOptions & DockPanel.IOptions>(),
   { tabsConstrained: false, addButtonEnabled: false, tabsMovable: true })
 
 const emits = defineEmits(['add'])
@@ -60,31 +59,5 @@ onUpdated(() => {
 </script>
 
 <style lang="scss" scoped>
-.lumino-container {
-  display: flex;
-  flex: 1;
-
-  :deep(.lm-mod-current) {
-    border-top: #00000060 2px solid;
-  }
-
-  :deep(.lumino-tab-active) {
-    border-top: #000000AA 2px solid;
-  }
-
-  :deep(.lumino-box-panel),
-  :deep(#panel-box) {
-    display: flex;
-    flex: 1;
-
-    .lumino-content {
-      border: 1px solid #c0c0c0;
-      border-top: none;
-      background: white;
-      position: relative;
-      overflow: auto;
-      display: flex;
-    }
-  }
-}
+@import './common.scss';
 </style>

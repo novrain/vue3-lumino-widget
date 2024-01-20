@@ -1,0 +1,39 @@
+.lumino-container {
+  display: flex;
+  flex: 1;
+
+  :deep(.lm-mod-current) {
+    border-top: #00000060 2px solid;
+  }
+
+  :deep(.lumino-tab-active) {
+    border-top: #000000AA 2px solid;
+  }
+
+  
+  :deep(.lumino-tab-panel),
+  :deep(#panel-tab),
+  :deep(.lumino-box-panel),
+  :deep(#panel-box) {
+    display: flex;
+    flex: 1;
+
+    .lumino-content {
+      border: 1px solid #c0c0c0;
+      border-top: none;
+      background: white;
+      position: relative;
+      overflow: auto;
+      display: flex;
+    }
+  }
+
+  :deep(.lm-TabBar-tabCloseIcon) {
+    display: flex;
+    justify-content: center;
+
+    &::before {
+      content: none;
+    }
+  }
+}
