@@ -29,13 +29,7 @@ Import the component or register it globally in your Vue instance:
 
 ```vue
 import { LuminoBoxPanel, LuminoWidget } from "vue3-lumino-widget"
-// this style include the lumino style; but lumino depends on the fontawsome for icon, it too big
-// if your project already using it, it's well, if not, maybe you can replace the "X" icon by css using other font.
-import 'vue3-lumino-widget/dist/style.css'
-// import "@fortawesome/fontawesome-free/css/all.css"
 ```
-
-By the way, to make close icon more customable, see this [pull request in lumino](https://github.com/jupyterlab/lumino/pull/669).
 
 Use the component in your template:
 
@@ -43,25 +37,40 @@ Use the component in your template:
 <template>
   <div class="container">
     <h4>Vue3 Lumino Widget</h4>
-    <h6>Drag and drop the tab item</h6>
+    <h6>BoxPanel with dock layout Drag and drop the tab item</h6>
     <h6>Current active: {{ active?.item.name || 'none' }}</h6>
     <LuminoBoxPanel>
       <LuminoWidget v-for="item in items"
                     :key="item.id"
-                    @close="onLuminoWidgetClose"
-                    @active="onLuminoWidgetActive"
-                    @show="onLuminoWidgetShow"
+                    @close="onWidgetInBoxPanelClose"
+                    @active="onWidgetInBoxPanelActive"
+                    @show="onWidgetInBoxPanelShow"
                     :title-active-class="activeClass"
                     :closable="item.closable"
                     :item="item">
         <p class="item-component">{{ item.name }}</p>
       </LuminoWidget>
     </LuminoBoxPanel>
+
+    <h6>TabPanel</h6>
+    <LuminoTabPanel>
+      <LuminoWidget v-for="item in tabItems"
+                    :key="item.id"
+                    @close="onWidgetInTabPanelClose"
+                    @active="onWidgetInTabPanelActive"
+                    @show="onWidgetInTabPanelShow"
+                    :title-active-class="activeClass"
+                    :closable="item.closable"
+                    :item="item">
+        <p class="item-component">{{ item.name }}</p>
+      </LuminoWidget>
+    </LuminoTabPanel>
   </div>
 </template>
 
 <script setup lang="ts">
 import LuminoBoxPanel from "./components/LuminoBoxPanel.vue"
+import LuminoTabPanel from "./components/LuminoTabPanel.vue"
 import LuminoWidget from "./components/LuminoWidget.vue"
 import { ref } from 'vue'
 import { ItemWidget, WidgetEvent } from "./components/ItemWidget"
@@ -71,18 +80,23 @@ const items = ref([
   { id: 'id2', name: 'item2' }
 ])
 
+const tabItems = ref([
+  { id: 'tid1', name: 'item1', closable: false },
+  { id: 'tid2', name: 'item2' }
+])
+
 const active = ref<ItemWidget>()
 
-const onLuminoWidgetClose = ({ msg, widget, item }: WidgetEvent) => {
+const onWidgetInBoxPanelClose = ({ msg, widget, item }: WidgetEvent) => {
   // do some thing, then doClose item.
   widget.doClose(msg)
 }
 
-const onLuminoWidgetActive = ({ msg, widget, item }: WidgetEvent) => {
+const onWidgetInBoxPanelActive = ({ msg, widget, item }: WidgetEvent) => {
   active.value = widget
 }
 
-const onLuminoWidgetShow = ({ msg, widget, item }: WidgetEvent) => {
+const onWidgetInBoxPanelShow = ({ msg, widget, item }: WidgetEvent) => {
   active.value = widget
 }
 
@@ -93,6 +107,21 @@ setInterval(() => {
   onOff = !onOff
   activeClass.value = onOff ? 'item-active-0' : 'item-active-1'
 }, 1000)
+
+const activeTab = ref<ItemWidget>()
+
+const onWidgetInTabPanelClose = ({ msg, widget, item }: WidgetEvent) => {
+  // do some thing, then doClose item.
+  widget.doClose(msg)
+}
+
+const onWidgetInTabPanelActive = ({ msg, widget, item }: WidgetEvent) => {
+  activeTab.value = widget
+}
+
+const onWidgetInTabPanelShow = ({ msg, widget, item }: WidgetEvent) => {
+  activeTab.value = widget
+}
 
 </script>
 
