@@ -1,0 +1,5 @@
+@import '@lumino/default-theme/style/index.css';
+
+.lm-TabBar-tab.lm-mod-closable>.lm-TabBar-tabCloseIcon:before {
+  content: none !important;
+}

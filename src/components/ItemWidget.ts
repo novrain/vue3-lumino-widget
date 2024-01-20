@@ -1,5 +1,6 @@
 import { Message, MessageLoop } from '@lumino/messaging'
 import { DockPanel, Widget } from '@lumino/widgets'
+import { DockPanelSvg } from '../lumino-extends/Extends'
 
 export interface Item {
   id: string,
@@ -106,7 +107,11 @@ export class ItemWidget extends Widget {
   }
 }
 
-export class CustomDockPanel extends DockPanel {
+export class CustomDockPanel extends DockPanelSvg {
+  constructor(options: DockPanel.IOptions = {}) {
+    super(options)
+  }
+
   private _currentWidget: Widget | null = null
   public get currentWidget(): Widget | null {
     return this._currentWidget
