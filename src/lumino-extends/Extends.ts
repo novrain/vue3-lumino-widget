@@ -15,43 +15,48 @@ export class TabBarSvg<T> extends TabBar<T> {
   constructor(options: TabBar.IOptions<T> = {}) {
     options.renderer = options.renderer || TabBarSvg.defaultRenderer
     super(options)
+    const addIcon = new TabBarSvg.IconRender('add')
+    addIcon.render(this.addButtonNode)
   }
 }
 
 export namespace TabBarSvg {
-  export class CloseIconRender implements VirtualElement.IRenderer {
+
+  const closeSvg = `<svg viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+                      <g class="jp-icon-none jp-icon-selectable-inverse jp-icon3-hover" fill="none">
+                        <circle cx="12" cy="12" r="11"/>
+                      </g>
+
+                      <g class="jp-icon3 jp-icon-selectable jp-icon-accent2-hover" fill="#616161">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                      </g>
+
+                      <g class="jp-icon-none jp-icon-busy" fill="none">
+                        <circle cx="12" cy="12" r="7"/>
+                      </g>
+                    </svg>`
+  const addSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" viewBox="0 0 24 24">
+                    <g class="jp-icon3" fill="#616161">
+                      <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                    </g>
+                  </svg>`
+
+  export class IconRender implements VirtualElement.IRenderer {
+    static iconMap = new Map<string, HTMLElement>()
     static closeIcon: HTMLElement | undefined = undefined
 
-    static loadIcon() {
+    static registerIcon(key: string, iconSvg: string) {
       const parser = new DOMParser()
-      const svg = parser.parseFromString(`<svg viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
-  <g class="jp-icon-none jp-icon-selectable-inverse jp-icon3-hover" fill="none">
-    <circle cx="12" cy="12" r="11"/>
-  </g>
-
-  <g class="jp-icon3 jp-icon-selectable jp-icon-accent2-hover" fill="#616161">
-    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-  </g>
-
-  <g class="jp-icon-none jp-icon-busy" fill="none">
-    <circle cx="12" cy="12" r="7"/>
-  </g>
-</svg>
-`, "image/svg+xml")
-      CloseIconRender.closeIcon = svg.documentElement
+      const svg = parser.parseFromString(iconSvg, "image/svg+xml")
+      IconRender.iconMap.set(key, svg.documentElement)
     }
 
-    static getIconElement() {
-      if (CloseIconRender.closeIcon === undefined) {
-        CloseIconRender.loadIcon()
-      }
-      return CloseIconRender.closeIcon?.cloneNode(true)
+    static getIconElement(key: string) {
+      return IconRender.iconMap.get(key)?.cloneNode(true)
     }
 
-    constructor() {
-      if (CloseIconRender.closeIcon === undefined) {
-        CloseIconRender.loadIcon()
-      }
+    constructor(public key: string) {
+
     }
 
     render(container: HTMLElement, options?: { attrs?: ElementAttrs | undefined; children?: readonly VirtualNode[] | undefined } | undefined): void {
@@ -65,11 +70,13 @@ export namespace TabBarSvg {
         container = document.createElement('div')
       }
       // @ts-ignore
-      container.appendChild(CloseIconRender.getIconElement())
+      container.appendChild(IconRender.getIconElement(this.key))
     }
   }
 
-  const closeIcon = new CloseIconRender()
+  IconRender.registerIcon('close', closeSvg)
+  IconRender.registerIcon('add', addSvg)
+  const closeIcon = new IconRender('close')
 
   /**
    * A modified implementation of the TabBar Renderer.
