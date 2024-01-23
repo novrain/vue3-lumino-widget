@@ -10,7 +10,7 @@
     border-top: #000000AA 2px solid;
   }
 
-  
+
   :deep(.lumino-tab-panel),
   :deep(#panel-tab),
   :deep(.lumino-box-panel),
@@ -25,16 +25,6 @@
       position: relative;
       overflow: auto;
       display: flex;
-    }
-  }
-
-  :deep(.lm-TabBar-tabCloseIcon) {
-    display: flex;
-    justify-content: center;
-    cursor: pointer;
-
-    &::before {
-      content: none;
     }
   }
 }

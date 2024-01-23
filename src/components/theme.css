@@ -1,5 +1,22 @@
 @import '@lumino/default-theme/style/index.css';
 
+
+.lm-TabBar-tab.lm-mod-closable>.lm-TabBar-tabCloseIcon {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+
 .lm-TabBar-tab.lm-mod-closable>.lm-TabBar-tabCloseIcon:before {
+  content: none !important;
+}
+
+.lm-TabBar .lm-TabBar-addButton {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+}
+
+.lm-TabBar .lm-TabBar-addButton:before {
   content: none !important;
 }

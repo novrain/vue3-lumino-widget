@@ -3,7 +3,8 @@
     <h4>Vue3 Lumino Widget</h4>
     <h6>BoxPanel with dock layout Drag and drop the tab item</h6>
     <h6>Current active: {{ active?.item.name || 'none' }}</h6>
-    <LuminoBoxPanel>
+    <LuminoBoxPanel addButtonEnabled
+                    @add='newItem'>
       <LuminoWidget v-for="item in items"
                     :key="item.id"
                     @close="onWidgetInBoxPanelClose"
@@ -76,6 +77,7 @@ const activeTab = ref<ItemWidget>()
 
 const onWidgetInTabPanelClose = ({ msg, widget, item }: WidgetEvent) => {
   // do some thing, then doClose item.
+  items.value = items.value.filter(i => i.id !== item.id)
   widget.doClose(msg)
 }
 
@@ -85,6 +87,10 @@ const onWidgetInTabPanelActive = ({ msg, widget, item }: WidgetEvent) => {
 
 const onWidgetInTabPanelShow = ({ msg, widget, item }: WidgetEvent) => {
   activeTab.value = widget
+}
+
+const newItem = () => {
+  items.value = [...items.value, { id: new Date().getTime() + '', name: 'newItem' }]
 }
 
 </script>
